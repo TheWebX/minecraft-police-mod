@@ -58,13 +58,14 @@ public class PoliceMob extends PathfinderMob {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new DefendVillagersGoal(this));
-        this.goalSelector.addGoal(3, new DefendPoliceGoal(this));
-        this.goalSelector.addGoal(4, new RetaliateGoal(this));
-        this.goalSelector.addGoal(5, new PatrolVillageGoal(this));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new AlwaysTargetHostilesGoal(this));
+        this.goalSelector.addGoal(3, new DefendVillagersGoal(this));
+        this.goalSelector.addGoal(4, new DefendPoliceGoal(this));
+        this.goalSelector.addGoal(5, new RetaliateGoal(this));
+        this.goalSelector.addGoal(6, new PatrolVillageGoal(this));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         
         this.targetSelector.addGoal(1, new SafeHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackSlimesGoal(this));
@@ -336,6 +337,21 @@ public class PoliceMob extends PathfinderMob {
         }
     }
     
+    private static class SafeHurtByTargetGoal extends HurtByTargetGoal {
+        public SafeHurtByTargetGoal(PoliceMob police) {
+            super(police);
+        }
+        
+        @Override
+        public boolean canUse() {
+            return super.canUse() && this.mob.getLastHurtByMob() != null && 
+                   !(this.mob.getLastHurtByMob() instanceof PoliceMob) &&
+                   !(this.mob.getLastHurtByMob() instanceof SoldierMob) &&
+                   !(this.mob.getLastHurtByMob() instanceof Villager) &&
+                   !(this.mob.getLastHurtByMob() instanceof IronGolem);
+        }
+    }
+    
     private static class AvoidFriendlyFireGoal extends Goal {
         private final PoliceMob police;
         
@@ -365,6 +381,49 @@ public class PoliceMob extends PathfinderMob {
         public void start() {
             this.police.setTarget(null);
             this.police.setAggressive(false);
+        }
+    }
+    
+    private static class AlwaysTargetHostilesGoal extends Goal {
+        private final PoliceMob police;
+        private int scanTimer = 0;
+        
+        public AlwaysTargetHostilesGoal(PoliceMob police) {
+            this.police = police;
+        }
+        
+        @Override
+        public boolean canUse() {
+            return this.police.getTarget() == null;
+        }
+        
+        @Override
+        public void tick() {
+            this.scanTimer++;
+            if (this.scanTimer >= 20) { // Scan every second
+                this.scanTimer = 0;
+                this.scanForHostiles();
+            }
+        }
+        
+        private void scanForHostiles() {
+            if (this.police.getTarget() != null) return;
+            
+            // Look for nearby hostile mobs
+            LivingEntity nearestHostile = this.police.level.getNearestEntity(
+                net.minecraft.world.entity.monster.Monster.class,
+                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(32.0D),
+                this.police,
+                this.police.getX(),
+                this.police.getY(),
+                this.police.getZ(),
+                this.police.getBoundingBox().inflate(32.0D)
+            );
+            
+            if (nearestHostile != null) {
+                this.police.setTarget(nearestHostile);
+                this.police.setAggressive(true);
+            }
         }
     }
     
