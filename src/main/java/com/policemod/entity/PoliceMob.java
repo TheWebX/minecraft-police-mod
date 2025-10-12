@@ -67,8 +67,9 @@ public class PoliceMob extends PathfinderMob {
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new AttackMonstersGoal(this));
-        this.targetSelector.addGoal(3, new AttackPlayersGoal(this));
+        this.targetSelector.addGoal(2, new AttackSlimesGoal(this));
+        this.targetSelector.addGoal(3, new AttackMonstersGoal(this));
+        this.targetSelector.addGoal(4, new AttackPlayersGoal(this));
     }
     
     @Override
@@ -310,6 +311,26 @@ public class PoliceMob extends PathfinderMob {
                 if (this.patrolTimer > 200 || this.police.distanceToSqr(this.patrolPos.getX(), this.patrolPos.getY(), this.patrolPos.getZ()) < 4.0D) {
                     this.patrolPos = null;
                 }
+            }
+        }
+    }
+    
+    private static class AttackSlimesGoal extends NearestAttackableTargetGoal<net.minecraft.world.entity.monster.Slime> {
+        public AttackSlimesGoal(PoliceMob police) {
+            super(police, net.minecraft.world.entity.monster.Slime.class, true);
+        }
+        
+        @Override
+        public boolean canUse() {
+            return super.canUse();
+        }
+        
+        @Override
+        public void start() {
+            super.start();
+            // Make the police aggressive when they find a slime
+            if (this.mob instanceof PoliceMob) {
+                ((PoliceMob) this.mob).setAggressive(true);
             }
         }
     }
