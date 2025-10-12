@@ -388,30 +388,47 @@ public class SoldierMob extends PathfinderMob {
         
         @Override
         public boolean canUse() {
-            return this.soldier.getTarget() == null;
+            return true; // Always active to prevent idle behavior
+        }
+        
+        @Override
+        public boolean canContinueToUse() {
+            return true; // Keep running continuously
         }
         
         @Override
         public void tick() {
             this.scanTimer++;
-            if (this.scanTimer >= 20) { // Scan every second
+            if (this.scanTimer >= 10) { // Scan every half second for more responsiveness
                 this.scanTimer = 0;
                 this.scanForHostiles();
             }
         }
         
         private void scanForHostiles() {
-            if (this.soldier.getTarget() != null) return;
+            // If we have a target, make sure it's still valid
+            if (this.soldier.getTarget() != null) {
+                LivingEntity currentTarget = this.soldier.getTarget();
+                if (currentTarget.isAlive() && this.soldier.distanceTo(currentTarget) <= 80.0D) {
+                    // Target is still valid, keep it
+                    this.soldier.setAggressive(true);
+                    return;
+                } else {
+                    // Target is dead or too far, clear it
+                    this.soldier.setTarget(null);
+                    this.soldier.setAggressive(false);
+                }
+            }
             
             // Look for nearby hostile mobs
             LivingEntity nearestHostile = this.soldier.level.getNearestEntity(
                 net.minecraft.world.entity.monster.Monster.class,
-                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(60.0D),
+                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(80.0D),
                 this.soldier,
                 this.soldier.getX(),
                 this.soldier.getY(),
                 this.soldier.getZ(),
-                this.soldier.getBoundingBox().inflate(60.0D)
+                this.soldier.getBoundingBox().inflate(80.0D)
             );
             
             if (nearestHostile != null) {

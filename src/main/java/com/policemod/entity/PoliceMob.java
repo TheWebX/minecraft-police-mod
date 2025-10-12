@@ -394,30 +394,47 @@ public class PoliceMob extends PathfinderMob {
         
         @Override
         public boolean canUse() {
-            return this.police.getTarget() == null;
+            return true; // Always active to prevent idle behavior
+        }
+        
+        @Override
+        public boolean canContinueToUse() {
+            return true; // Keep running continuously
         }
         
         @Override
         public void tick() {
             this.scanTimer++;
-            if (this.scanTimer >= 20) { // Scan every second
+            if (this.scanTimer >= 10) { // Scan every half second for more responsiveness
                 this.scanTimer = 0;
                 this.scanForHostiles();
             }
         }
         
         private void scanForHostiles() {
-            if (this.police.getTarget() != null) return;
+            // If we have a target, make sure it's still valid
+            if (this.police.getTarget() != null) {
+                LivingEntity currentTarget = this.police.getTarget();
+                if (currentTarget.isAlive() && this.police.distanceTo(currentTarget) <= 64.0D) {
+                    // Target is still valid, keep it
+                    this.police.setAggressive(true);
+                    return;
+                } else {
+                    // Target is dead or too far, clear it
+                    this.police.setTarget(null);
+                    this.police.setAggressive(false);
+                }
+            }
             
             // Look for nearby hostile mobs
             LivingEntity nearestHostile = this.police.level.getNearestEntity(
                 net.minecraft.world.entity.monster.Monster.class,
-                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(32.0D),
+                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(64.0D),
                 this.police,
                 this.police.getX(),
                 this.police.getY(),
                 this.police.getZ(),
-                this.police.getBoundingBox().inflate(32.0D)
+                this.police.getBoundingBox().inflate(64.0D)
             );
             
             if (nearestHostile != null) {
