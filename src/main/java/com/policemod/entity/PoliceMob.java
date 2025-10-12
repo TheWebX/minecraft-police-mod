@@ -58,10 +58,11 @@ public class PoliceMob extends PathfinderMob {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new DefendVillagersGoal(this));
-        this.goalSelector.addGoal(3, new PatrolVillageGoal(this));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new RetaliateGoal(this));
+        this.goalSelector.addGoal(4, new PatrolVillageGoal(this));
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackMonstersGoal(this));
@@ -104,15 +105,23 @@ public class PoliceMob extends PathfinderMob {
         
         Vec3 startPos = this.position().add(0, this.getEyeHeight(), 0);
         Vec3 targetPos = target.position().add(0, target.getBbHeight() / 2, 0);
-        Vec3 direction = targetPos.subtract(startPos).normalize();
+        
+        // Add some prediction for moving targets
+        Vec3 targetVelocity = target.getDeltaMovement();
+        double distance = startPos.distanceTo(targetPos);
+        double timeToHit = distance / 2.0; // Bullet speed is 2.0
+        
+        Vec3 predictedPos = targetPos.add(targetVelocity.scale(timeToHit));
+        Vec3 direction = predictedPos.subtract(startPos).normalize();
         
         BulletEntity bullet = new BulletEntity(PoliceMod.BULLET.get(), this.level);
         bullet.setPos(startPos);
-        bullet.shoot(direction.x, direction.y, direction.z, 2.0F, 1.0F);
+        bullet.shoot(direction.x, direction.y, direction.z, 2.5F, 0.5F); // Increased speed, reduced spread
         bullet.setOwner(this);
+        bullet.setDamage(4.0D); // Increased damage
         
         this.level.addFreshEntity(bullet);
-        this.setShootCooldown(20); // 1 second cooldown
+        this.setShootCooldown(15); // Reduced cooldown for more aggressive shooting
         
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F);
     }
@@ -278,6 +287,76 @@ public class PoliceMob extends PathfinderMob {
         @Override
         public boolean canUse() {
             return super.canUse() && this.mob.isAggressive();
+        }
+    }
+    
+    private static class RetaliateGoal extends Goal {
+        private final PoliceMob police;
+        private LivingEntity target;
+        private int attackTimer = 0;
+        private int followTimer = 0;
+        
+        public RetaliateGoal(PoliceMob police) {
+            this.police = police;
+        }
+        
+        @Override
+        public boolean canUse() {
+            LivingEntity target = this.police.getTarget();
+            return target != null && target.isAlive() && this.police.isAggressive();
+        }
+        
+        @Override
+        public void start() {
+            this.target = this.police.getTarget();
+            this.attackTimer = 0;
+            this.followTimer = 0;
+        }
+        
+        @Override
+        public void tick() {
+            if (this.target == null || !this.target.isAlive()) {
+                this.stop();
+                return;
+            }
+            
+            this.followTimer++;
+            this.attackTimer++;
+            
+            // Follow the target
+            if (this.police.distanceToSqr(this.target) > 64.0D) {
+                this.police.getNavigation().moveTo(this.target, 1.0D);
+            } else {
+                this.police.getNavigation().stop();
+            }
+            
+            // Look at target
+            this.police.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+            
+            // Shoot at target if in range and cooldown is ready
+            double distance = this.police.distanceToSqr(this.target);
+            if (distance <= 256.0D && this.police.canShoot()) { // 16 block range
+                this.police.shootAtTarget(this.target);
+            }
+            
+            // If target is too far, stop following after 10 seconds
+            if (this.followTimer > 200 && distance > 400.0D) {
+                this.police.setTarget(null);
+                this.police.setAggressive(false);
+                this.stop();
+            }
+        }
+        
+        @Override
+        public void stop() {
+            this.target = null;
+            this.attackTimer = 0;
+            this.followTimer = 0;
+        }
+        
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
     }
 }
