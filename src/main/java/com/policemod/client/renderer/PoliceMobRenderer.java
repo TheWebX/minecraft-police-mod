@@ -27,26 +27,14 @@ public class PoliceMobRenderer extends HumanoidMobRenderer<PoliceMob, HumanoidMo
     
     @Override
     public void render(PoliceMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
-        // Store original arm positions
-        float originalRightArmX = this.getModel().rightArm.xRot;
-        float originalRightArmY = this.getModel().rightArm.yRot;
-        float originalRightArmZ = this.getModel().rightArm.zRot;
-        
-        // Modify arm position for shooting animation
-        if (entity.isAggressive() && entity.getTarget() != null) {
-            // Raise right arm when shooting
-            this.getModel().rightArm.xRot = -1.5F;
-            this.getModel().rightArm.yRot = 0.0F;
-            this.getModel().rightArm.zRot = 0.0F;
-        }
+        // Test: Always raise arms to see if animation works
+        this.getModel().rightArm.xRot = -2.0F;
+        this.getModel().rightArm.yRot = 0.0F;
+        this.getModel().rightArm.zRot = 0.0F;
+        this.getModel().leftArm.xRot = -0.5F;
         
         // Render the entity
         super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
-        
-        // Restore original arm positions
-        this.getModel().rightArm.xRot = originalRightArmX;
-        this.getModel().rightArm.yRot = originalRightArmY;
-        this.getModel().rightArm.zRot = originalRightArmZ;
     }
     
     
