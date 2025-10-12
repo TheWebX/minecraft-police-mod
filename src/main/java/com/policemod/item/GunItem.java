@@ -2,6 +2,7 @@ package com.policemod.item;
 
 import com.policemod.PoliceMod;
 import com.policemod.entity.BulletEntity;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -49,7 +50,7 @@ public class GunItem extends Item {
             
             // Play sound
             level.playSound(null, player.getX(), player.getY(), player.getZ(), 
-                PoliceMod.GUN_SHOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
             
             // Add cooldown
             player.getCooldowns().addCooldown(this, 20); // 1 second cooldown

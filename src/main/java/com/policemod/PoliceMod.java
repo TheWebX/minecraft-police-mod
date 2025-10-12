@@ -49,19 +49,18 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
     
-    // Spawn egg temporarily disabled due to registry timing issues
-    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-    //         () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
     
-    // Sounds
-    public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "gun_shot")));
+    // Sounds - temporarily disabled to avoid missing sound warnings
+    // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
+    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "gun_shot")));
     
-    public static final RegistryObject<SoundEvent> POLICE_HURT = SOUNDS.register("police_hurt",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_hurt")));
+    // public static final RegistryObject<SoundEvent> POLICE_HURT = SOUNDS.register("police_hurt",
+    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_hurt")));
     
-    public static final RegistryObject<SoundEvent> POLICE_DEATH = SOUNDS.register("police_death",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_death")));
+    // public static final RegistryObject<SoundEvent> POLICE_DEATH = SOUNDS.register("police_death",
+    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_death")));
     
     public PoliceMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

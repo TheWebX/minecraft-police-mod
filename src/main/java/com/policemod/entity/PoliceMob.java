@@ -114,7 +114,7 @@ public class PoliceMob extends PathfinderMob {
         this.level.addFreshEntity(bullet);
         this.setShootCooldown(20); // 1 second cooldown
         
-        this.playSound(PoliceMod.GUN_SHOT.get(), 1.0F, 1.0F);
+        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F);
     }
     
     @Override
@@ -124,12 +124,12 @@ public class PoliceMob extends PathfinderMob {
     
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return PoliceMod.POLICE_HURT.get();
+        return SoundEvents.VILLAGER_HURT;
     }
     
     @Override
     protected SoundEvent getDeathSound() {
-        return PoliceMod.POLICE_DEATH.get();
+        return SoundEvents.VILLAGER_DEATH;
     }
     
     @Override

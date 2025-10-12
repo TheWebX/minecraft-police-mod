@@ -14,12 +14,7 @@
     }
   },
   "result": {
-    "item": "minecraft:spawn_egg",
-    "count": 1,
-    "nbt": {
-      "EntityTag": {
-        "id": "policemod:police_mob"
-      }
-    }
+    "item": "policemod:police_spawn_egg",
+    "count": 1
   }
 }
