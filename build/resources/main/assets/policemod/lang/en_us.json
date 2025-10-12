@@ -1,0 +1,8 @@
+{
+  "entity.policemod.police_mob": "Police Officer",
+  "item.policemod.police_gun": "Police Gun",
+  "itemGroup.policemod": "Police Mod",
+  "subtitles.policemod.gun_shot": "Gun Shot",
+  "subtitles.policemod.police_hurt": "Police Officer Hurt",
+  "subtitles.policemod.police_death": "Police Officer Death"
+}

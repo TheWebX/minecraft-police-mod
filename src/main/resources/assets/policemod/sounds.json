@@ -1,0 +1,20 @@
+{
+  "gun_shot": {
+    "sounds": [
+      "policemod:gun_shot"
+    ],
+    "subtitle": "Gun Shot"
+  },
+  "police_hurt": {
+    "sounds": [
+      "policemod:police_hurt"
+    ],
+    "subtitle": "Police Officer Hurt"
+  },
+  "police_death": {
+    "sounds": [
+      "policemod:police_death"
+    ],
+    "subtitle": "Police Officer Death"
+  }
+}

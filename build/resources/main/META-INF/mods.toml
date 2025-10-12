@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[44,)"
+license="MIT"
+
+[[mods]]
+modId="policemod"
+version="1.0.0"
+displayName="Police Mod"
+description='''
+A mod that adds police mobs armed with guns to defend villagers from threats.
+Police officers will patrol villages and protect villagers from hostile mobs and players.
+'''
+authors="PoliceModDev"
+credits="Minecraft Forge Community"
+logoFile="logo.png"
+
+[[dependencies.policemod]]
+modId="forge"
+mandatory=true
+versionRange="[44,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.policemod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19.3,1.20)"
+ordering="NONE"
+side="BOTH"

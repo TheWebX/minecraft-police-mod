@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "EVE",
+    " E "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:egg"
+    },
+    "V": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "minecraft:spawn_egg",
+    "count": 1,
+    "nbt": {
+      "EntityTag": {
+        "id": "policemod:police_mob"
+      }
+    }
+  }
+}
