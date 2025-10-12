@@ -20,6 +20,8 @@ The mod has been fixed to resolve the `Registry Object not present: policemod:po
 - **Protection**: Police automatically defend villagers from hostile mobs and players
 - **Smart AI**: Police patrol villages and respond to threats
 
+**Note**: Spawn egg is temporarily unavailable due to Forge 1.19.3 registry timing issues. Use the summon command instead.
+
 ## Crafting Recipes
 
 ### Police Gun
@@ -32,7 +34,7 @@ The mod has been fixed to resolve the `Registry Object not present: policemod:po
 - S = Stick
 
 ### Police Spawn Egg
-- **Temporarily Disabled**: Due to registry timing issues in Forge 1.19.3
+- **Not Available**: Due to persistent registry timing issues in Forge 1.19.3
 - Use `/summon policemod:police_mob` command instead
 
 ## Commands

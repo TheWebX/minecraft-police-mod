@@ -198,5 +198,4 @@ Writing Output: /workspace/build/reobfJar/output.jar
   data/policemod/loot_tables/entities/police_mob.json
   data/policemod/recipes/
   data/policemod/recipes/police_gun.json
-  data/policemod/recipes/police_spawn_egg.json
   pack.mcmeta

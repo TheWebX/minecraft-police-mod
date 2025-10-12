@@ -10,7 +10,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
+// import net.minecraft.world.item.SpawnEggItem; // Temporarily disabled
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -49,8 +49,9 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
     
-    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    // Spawn egg temporarily disabled due to persistent registry timing issues
+    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+    //         () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
     
     // Sounds - temporarily disabled to avoid missing sound warnings
     // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
