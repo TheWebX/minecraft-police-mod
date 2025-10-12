@@ -8,14 +8,14 @@ A Minecraft Forge mod that adds police mobs armed with guns to defend villagers 
 - **Gun Weapons**: Police officers are armed with guns that shoot bullets
 - **Villager Protection**: Police officers automatically defend villagers from hostile mobs and players
 - **Smart AI**: Police officers have intelligent behavior to patrol, detect threats, and protect villagers
-- **Custom Items**: Police gun weapon and spawn egg for spawning police officers
+- **Custom Items**: Police gun weapon (spawn egg temporarily unavailable)
 
 ## How to Use
 
 1. **Installation**: Place the mod jar file in your Minecraft mods folder
-2. **Spawning Police**: Use the Police Spawn Egg from the creative menu or craft it
+2. **Spawning Police**: Use the command `/summon policemod:police_mob` to spawn police officers
 3. **Crafting**: Craft a Police Gun using iron ingots and sticks
-4. **Protection**: Police officers will automatically spawn in villages and protect villagers
+4. **Protection**: Police officers will automatically defend villagers and other police from threats
 
 ## Crafting Recipes
 
@@ -29,13 +29,7 @@ A Minecraft Forge mod that adds police mobs armed with guns to defend villagers 
 - S = Stick
 
 ### Police Spawn Egg
-```
- E 
-EVE
- E 
-```
-- E = Egg
-- V = Iron Ingot
+**Note**: Spawn egg is currently unavailable due to Forge 1.19.3 registry timing issues. Use `/summon policemod:police_mob` command instead.
 
 ## Behavior
 
