@@ -139,5 +139,11 @@ public class PoliceMod {
             event.accept(POLICE_SPAWN_EGG.get());
             event.accept(SOLDIER_SPAWN_EGG.get());
         }
+        
+        // Also add to miscellaneous tab as backup
+        if (event.getTab() == net.minecraft.world.item.CreativeModeTabs.MISC) {
+            event.accept(POLICE_SPAWN_EGG.get());
+            event.accept(SOLDIER_SPAWN_EGG.get());
+        }
     }
 }

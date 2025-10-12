@@ -128,7 +128,7 @@ public class PoliceMob extends PathfinderMob {
         this.level.addFreshEntity(bullet);
         this.setShootCooldown(15); // Reduced cooldown for more aggressive shooting
         
-        this.playSound(PoliceMod.GUN_SHOT.get(), 1.0F, 0.8F);
+        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
     }
     
     @Override
