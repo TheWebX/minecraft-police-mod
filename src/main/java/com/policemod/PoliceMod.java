@@ -5,6 +5,7 @@ import com.policemod.entity.SoldierMob;
 import com.policemod.entity.BulletEntity;
 import com.policemod.item.GunItem;
 import com.policemod.item.MachineGunItem;
+import com.policemod.item.CustomSpawnEggItem;
 import com.policemod.command.SpawnPoliceCommand;
 import com.policemod.command.SpawnSoldierCommand;
 import net.minecraft.resources.ResourceLocation;
@@ -64,15 +65,12 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.RARE)));
     
-    // Spawn eggs temporarily disabled due to persistent Forge 1.19.3 registry timing issues
-    // Use /summon commands instead:
-    // /summon policemod:police_mob
-    // /summon policemod:soldier_mob
-    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-    //         () -> new DeferredSpawnEggItem(POLICE_MOB, 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    // Custom spawn eggs using supplier to avoid registry timing issues
+    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+            () -> new CustomSpawnEggItem(() -> POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, "Police Officer", new Item.Properties()));
     
-    // public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
-    //         () -> new DeferredSpawnEggItem(SOLDIER_MOB, 0x8B4513, 0x2F4F4F, new Item.Properties()));
+    public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
+            () -> new CustomSpawnEggItem(() -> SOLDIER_MOB.get(), 0x8B4513, 0x2F4F4F, "Soldier", new Item.Properties()));
     
     // Sounds - temporarily disabled to avoid missing sound warnings
     // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
