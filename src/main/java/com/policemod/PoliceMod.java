@@ -33,7 +33,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class PoliceMod {
     public static final String MODID = "policemod";
     
-    public static final CreativeModeTab POLICE_TAB = PoliceModTab.POLICE_TAB;
+    public static CreativeModeTab POLICE_TAB;
     
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
@@ -92,12 +92,21 @@ public class PoliceMod {
         
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::entityAttributes);
+        modEventBus.addListener(this::registerTabs);
         
         MinecraftForge.EVENT_BUS.register(this);
     }
     
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Common setup code here
+    }
+    
+    @SubscribeEvent
+    public void registerTabs(CreativeModeTabEvent.Register event) {
+        POLICE_TAB = event.registerCreativeModeTab(new ResourceLocation(MODID, "police_tab"), builder ->
+            builder.title(net.minecraft.network.chat.Component.translatable("itemGroup.policemod"))
+                  .icon(() -> new net.minecraft.world.item.ItemStack(POLICE_GUN.get()))
+        );
     }
     
     @SubscribeEvent
@@ -117,6 +126,12 @@ public class PoliceMod {
         if (event.getTab() == POLICE_TAB) {
             event.accept(POLICE_GUN.get());
             event.accept(MACHINE_GUN.get());
+            event.accept(POLICE_SPAWN_EGG.get());
+            event.accept(SOLDIER_SPAWN_EGG.get());
+        }
+        
+        // Also add spawn eggs to the spawn eggs tab
+        if (event.getTab() == net.minecraft.world.item.CreativeModeTabs.SPAWN_EGGS) {
             event.accept(POLICE_SPAWN_EGG.get());
             event.accept(SOLDIER_SPAWN_EGG.get());
         }

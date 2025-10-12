@@ -124,7 +124,7 @@ public class SoldierMob extends PathfinderMob {
         bullet.setDamage(8.0D); // Higher damage than police
         
         this.level.addFreshEntity(bullet);
-        this.setShootCooldown(5); // Even faster shooting rate (machine gun)
+            this.setShootCooldown(2); // Double shooting rate (machine gun)
         
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
     }
@@ -406,12 +406,12 @@ public class SoldierMob extends PathfinderMob {
             // Look for nearby hostile mobs
             LivingEntity nearestHostile = this.soldier.level.getNearestEntity(
                 net.minecraft.world.entity.monster.Monster.class,
-                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(32.0D),
+                net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(60.0D),
                 this.soldier,
                 this.soldier.getX(),
                 this.soldier.getY(),
                 this.soldier.getZ(),
-                this.soldier.getBoundingBox().inflate(32.0D)
+                this.soldier.getBoundingBox().inflate(60.0D)
             );
             
             if (nearestHostile != null) {
@@ -524,12 +524,12 @@ public class SoldierMob extends PathfinderMob {
             
             // Shoot at target if in range and cooldown is ready
             double distance = this.soldier.distanceToSqr(this.target);
-            if (distance <= 2500.0D && this.soldier.canShoot()) { // 50 block range (increased from 40)
+            if (distance <= 3600.0D && this.soldier.canShoot()) { // 60 block range (increased from 50)
                 this.soldier.shootAtTarget(this.target);
             }
             
             // If target is too far, stop following after 10 seconds
-            if (this.followTimer > 200 && distance > 2500.0D) {
+            if (this.followTimer > 200 && distance > 3600.0D) {
                 this.soldier.setTarget(null);
                 this.soldier.setAggressive(false);
                 this.stop();
