@@ -68,6 +68,7 @@ public class SoldierMob extends PathfinderMob {
         this.targetSelector.addGoal(2, new AttackSlimesGoal(this));
         this.targetSelector.addGoal(3, new AttackMonstersGoal(this));
         this.targetSelector.addGoal(4, new AttackPlayersGoal(this));
+        this.targetSelector.addGoal(5, new AvoidFriendlyFireGoal(this));
     }
     
     @Override
@@ -326,6 +327,38 @@ public class SoldierMob extends PathfinderMob {
             if (this.mob instanceof SoldierMob) {
                 ((SoldierMob) this.mob).setAggressive(true);
             }
+        }
+    }
+    
+    private static class AvoidFriendlyFireGoal extends Goal {
+        private final SoldierMob soldier;
+        
+        public AvoidFriendlyFireGoal(SoldierMob soldier) {
+            this.soldier = soldier;
+        }
+        
+        @Override
+        public boolean canUse() {
+            LivingEntity target = this.soldier.getTarget();
+            if (target == null) return false;
+            
+            // If targeting a friendly entity, stop targeting
+            if (target instanceof PoliceMob || 
+                target instanceof SoldierMob || 
+                target instanceof Villager ||
+                target instanceof IronGolem) {
+                this.soldier.setTarget(null);
+                this.soldier.setAggressive(false);
+                return true;
+            }
+            
+            return false;
+        }
+        
+        @Override
+        public void start() {
+            this.soldier.setTarget(null);
+            this.soldier.setAggressive(false);
         }
     }
     
