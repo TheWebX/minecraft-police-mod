@@ -49,8 +49,9 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
     
-    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    // Spawn egg temporarily disabled due to registry timing issues
+    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+    //         () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
     
     // Sounds
     public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
