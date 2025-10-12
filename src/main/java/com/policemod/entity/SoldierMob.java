@@ -315,7 +315,16 @@ public class SoldierMob extends PathfinderMob {
         
         @Override
         public boolean canUse() {
-            return super.canUse() && this.mob.isAggressive();
+            return super.canUse();
+        }
+        
+        @Override
+        public void start() {
+            super.start();
+            // Make the soldier aggressive when they find a target
+            if (this.mob instanceof SoldierMob) {
+                ((SoldierMob) this.mob).setAggressive(true);
+            }
         }
         
         @Override

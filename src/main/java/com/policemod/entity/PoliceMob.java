@@ -321,7 +321,16 @@ public class PoliceMob extends PathfinderMob {
         
         @Override
         public boolean canUse() {
-            return super.canUse() && this.mob.isAggressive();
+            return super.canUse();
+        }
+        
+        @Override
+        public void start() {
+            super.start();
+            // Make the police aggressive when they find a target
+            if (this.mob instanceof PoliceMob) {
+                ((PoliceMob) this.mob).setAggressive(true);
+            }
         }
         
         @Override
