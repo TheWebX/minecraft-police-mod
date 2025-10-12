@@ -1,5 +1,6 @@
 package com.policemod.entity;
 
+import com.policemod.entity.SoldierMob;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -70,8 +71,11 @@ public class BulletEntity extends Projectile implements ItemSupplier {
             return;
         }
         
-        // Don't hit other police or villagers
-        if (entity instanceof PoliceMob || entity instanceof net.minecraft.world.entity.npc.Villager) {
+        // Don't hit other police, soldiers, or villagers
+        if (entity instanceof PoliceMob || 
+            entity instanceof SoldierMob || 
+            entity instanceof net.minecraft.world.entity.npc.Villager ||
+            entity instanceof net.minecraft.world.entity.animal.IronGolem) {
             return;
         }
         
