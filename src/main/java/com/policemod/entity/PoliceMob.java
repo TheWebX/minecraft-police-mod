@@ -44,7 +44,7 @@ public class PoliceMob extends PathfinderMob {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
-                .add(Attributes.FOLLOW_RANGE, 48.0D); // Increased from 32 to 48 blocks
+                .add(Attributes.FOLLOW_RANGE, 64.0D); // Increased from 48 to 64 blocks
     }
     
     @Override
@@ -119,7 +119,7 @@ public class PoliceMob extends PathfinderMob {
         bullet.setPos(startPos);
         bullet.shoot(direction.x, direction.y, direction.z, 2.5F, 0.5F); // Increased speed, reduced spread
         bullet.setOwner(this);
-        bullet.setDamage(4.0D); // Increased damage
+        bullet.setDamage(6.0D); // Increased damage from 4 to 6
         
         this.level.addFreshEntity(bullet);
         this.setShootCooldown(15); // Reduced cooldown for more aggressive shooting
@@ -380,7 +380,7 @@ public class PoliceMob extends PathfinderMob {
             
             // Shoot at target if in range and cooldown is ready
             double distance = this.police.distanceToSqr(this.target);
-            if (distance <= 576.0D && this.police.canShoot()) { // 24 block range (increased from 16)
+            if (distance <= 1024.0D && this.police.canShoot()) { // 32 block range (increased from 24)
                 this.police.shootAtTarget(this.target);
             }
             
