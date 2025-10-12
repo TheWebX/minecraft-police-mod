@@ -313,14 +313,37 @@ public class PoliceMob extends PathfinderMob {
         }
     }
     
-    private static class AttackMonstersGoal extends NearestAttackableTargetGoal<Monster> {
+    private static class AttackMonstersGoal extends NearestAttackableTargetGoal<LivingEntity> {
         public AttackMonstersGoal(PoliceMob police) {
-            super(police, Monster.class, true);
+            super(police, LivingEntity.class, true);
         }
         
         @Override
         public boolean canUse() {
             return super.canUse() && this.mob.isAggressive();
+        }
+        
+        @Override
+        protected boolean canAttack(LivingEntity target, net.minecraft.world.entity.ai.targeting.TargetingConditions conditions) {
+            if (target == null) return false;
+            
+            // Don't attack peaceful animals, villagers, or golems
+            if (target instanceof Villager || target instanceof IronGolem) {
+                return false;
+            }
+            
+            // Don't attack other police or soldiers
+            if (target instanceof PoliceMob || target.getType().getRegistryName().toString().equals("policemod:soldier_mob")) {
+                return false;
+            }
+            
+            // Don't attack peaceful animals (cows, pigs, sheep, chickens, etc.)
+            if (target instanceof net.minecraft.world.entity.animal.Animal && !(target instanceof net.minecraft.world.entity.monster.Monster)) {
+                return false;
+            }
+            
+            // Attack all other entities (hostile mobs, players, etc.)
+            return true;
         }
     }
     
