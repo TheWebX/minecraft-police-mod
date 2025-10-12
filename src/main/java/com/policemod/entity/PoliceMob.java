@@ -44,7 +44,7 @@ public class PoliceMob extends PathfinderMob {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+                .add(Attributes.FOLLOW_RANGE, 48.0D); // Increased from 32 to 48 blocks
     }
     
     @Override
@@ -58,11 +58,12 @@ public class PoliceMob extends PathfinderMob {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new DefendVillagersGoal(this));
-        this.goalSelector.addGoal(3, new RetaliateGoal(this));
-        this.goalSelector.addGoal(4, new PatrolVillageGoal(this));
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new DefendPoliceGoal(this));
+        this.goalSelector.addGoal(4, new RetaliateGoal(this));
+        this.goalSelector.addGoal(5, new PatrolVillageGoal(this));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackMonstersGoal(this));
@@ -209,12 +210,12 @@ public class PoliceMob extends PathfinderMob {
             if (this.scanTimer >= 20) {
                 this.scanTimer = 0;
                 this.targetVillager = this.police.level.getNearestEntity(Villager.class, 
-                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(16.0D), 
+                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(24.0D), 
                     this.police, 
                     this.police.getX(), 
                     this.police.getY(), 
                     this.police.getZ(), 
-                    this.police.getBoundingBox().inflate(16.0D, 4.0D, 16.0D));
+                    this.police.getBoundingBox().inflate(24.0D, 4.0D, 24.0D));
                 
                 if (this.targetVillager != null) {
                     this.police.setTargetVillager(this.targetVillager);
@@ -228,6 +229,50 @@ public class PoliceMob extends PathfinderMob {
                 if (attacker != null && attacker != this.police) {
                     this.police.setTarget(attacker);
                     this.police.setAggressive(true);
+                }
+            }
+        }
+    }
+    
+    private static class DefendPoliceGoal extends Goal {
+        private final PoliceMob police;
+        private int scanTimer = 0;
+        
+        public DefendPoliceGoal(PoliceMob police) {
+            this.police = police;
+        }
+        
+        @Override
+        public boolean canUse() {
+            return true; // Always try to defend other police
+        }
+        
+        @Override
+        public void start() {
+            this.scanTimer = 0;
+        }
+        
+        @Override
+        public void tick() {
+            this.scanTimer++;
+            
+            // Scan for other police in danger every 20 ticks (1 second)
+            if (this.scanTimer >= 20) {
+                this.scanTimer = 0;
+                PoliceMob otherPolice = this.police.level.getNearestEntity(PoliceMob.class, 
+                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(24.0D), 
+                    this.police, 
+                    this.police.getX(), 
+                    this.police.getY(), 
+                    this.police.getZ(), 
+                    this.police.getBoundingBox().inflate(24.0D, 4.0D, 24.0D));
+                
+                if (otherPolice != null && otherPolice != this.police && otherPolice.isAlive()) {
+                    LivingEntity attacker = otherPolice.getLastHurtByMob();
+                    if (attacker != null && attacker != this.police) {
+                        this.police.setTarget(attacker);
+                        this.police.setAggressive(true);
+                    }
                 }
             }
         }
@@ -335,7 +380,7 @@ public class PoliceMob extends PathfinderMob {
             
             // Shoot at target if in range and cooldown is ready
             double distance = this.police.distanceToSqr(this.target);
-            if (distance <= 256.0D && this.police.canShoot()) { // 16 block range
+            if (distance <= 576.0D && this.police.canShoot()) { // 24 block range (increased from 16)
                 this.police.shootAtTarget(this.target);
             }
             

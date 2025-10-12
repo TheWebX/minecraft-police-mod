@@ -142,6 +142,6 @@ public class BulletEntity extends Projectile implements ItemSupplier {
     
     @Override
     public net.minecraft.world.item.ItemStack getItem() {
-        return new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW);
+        return new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_NUGGET);
     }
 }
