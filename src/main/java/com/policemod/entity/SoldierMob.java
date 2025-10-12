@@ -43,7 +43,7 @@ public class SoldierMob extends PathfinderMob {
                 .add(Attributes.MAX_HEALTH, 25.0D) // Higher health than police
                 .add(Attributes.MOVEMENT_SPEED, 0.3D) // Faster movement
                 .add(Attributes.ATTACK_DAMAGE, 4.0D)
-                .add(Attributes.FOLLOW_RANGE, 80.0D); // Even longer range
+                .add(Attributes.FOLLOW_RANGE, 100.0D); // Increased from 80 to 100 blocks
     }
     
     @Override
@@ -121,7 +121,7 @@ public class SoldierMob extends PathfinderMob {
         bullet.setDamage(8.0D); // Higher damage than police
         
         this.level.addFreshEntity(bullet);
-        this.setShootCooldown(8); // Much faster shooting rate (machine gun)
+        this.setShootCooldown(5); // Even faster shooting rate (machine gun)
         
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
     }
@@ -308,14 +308,37 @@ public class SoldierMob extends PathfinderMob {
         }
     }
     
-    private static class AttackMonstersGoal extends NearestAttackableTargetGoal<Monster> {
+    private static class AttackMonstersGoal extends NearestAttackableTargetGoal<LivingEntity> {
         public AttackMonstersGoal(SoldierMob soldier) {
-            super(soldier, Monster.class, true);
+            super(soldier, LivingEntity.class, true);
         }
         
         @Override
         public boolean canUse() {
             return super.canUse() && this.mob.isAggressive();
+        }
+        
+        @Override
+        protected boolean canAttack(LivingEntity target, net.minecraft.world.entity.ai.targeting.TargetingConditions conditions) {
+            if (target == null) return false;
+            
+            // Don't attack peaceful animals, villagers, or golems
+            if (target instanceof Villager || target instanceof IronGolem) {
+                return false;
+            }
+            
+            // Don't attack other police or soldiers
+            if (target instanceof PoliceMob || target.getType().getRegistryName().toString().equals("policemod:soldier_mob")) {
+                return false;
+            }
+            
+            // Don't attack peaceful animals (cows, pigs, sheep, chickens, etc.)
+            if (target instanceof net.minecraft.world.entity.animal.Animal && !(target instanceof net.minecraft.world.entity.monster.Monster)) {
+                return false;
+            }
+            
+            // Attack all other entities (hostile mobs, players, etc.)
+            return true;
         }
     }
     
