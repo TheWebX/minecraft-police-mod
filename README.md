@@ -13,9 +13,17 @@ A Minecraft Forge mod that adds police mobs armed with guns to defend villagers 
 ## How to Use
 
 1. **Installation**: Place the mod jar file in your Minecraft mods folder
-2. **Spawning Police**: Use the command `/summon policemod:police_mob` to spawn police officers
-3. **Crafting**: Craft a Police Gun using iron ingots and sticks
-4. **Protection**: Police officers will automatically defend villagers and other police from threats
+2. **Spawning Police**: Use the command `/spawnpolice` or `/summon policemod:police_mob` to spawn police officers
+3. **Spawning Soldiers**: Use the command `/spawnsoldier` or `/summon policemod:soldier_mob` to spawn soldiers
+4. **Crafting**: Craft a Police Gun using iron ingots and sticks
+5. **Protection**: Police officers and soldiers will automatically defend villagers and each other from threats
+
+### Commands
+
+- `/spawnpolice [count]` - Spawn 1-10 police officers (requires OP)
+- `/spawnsoldier [count]` - Spawn 1-10 soldiers (requires OP)
+- `/summon policemod:police_mob` - Spawn 1 police officer
+- `/summon policemod:soldier_mob` - Spawn 1 soldier
 
 ## Crafting Recipes
 

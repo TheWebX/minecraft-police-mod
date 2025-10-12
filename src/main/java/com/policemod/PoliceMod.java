@@ -5,6 +5,8 @@ import com.policemod.entity.SoldierMob;
 import com.policemod.entity.BulletEntity;
 import com.policemod.item.GunItem;
 import com.policemod.item.MachineGunItem;
+import com.policemod.command.SpawnPoliceCommand;
+import com.policemod.command.SpawnSoldierCommand;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -12,9 +14,10 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
+// import net.minecraft.world.item.SpawnEggItem; // Temporarily disabled
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -61,11 +64,15 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.RARE)));
     
-    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    // Spawn eggs temporarily disabled due to persistent Forge 1.19.3 registry timing issues
+    // Use /summon commands instead:
+    // /summon policemod:police_mob
+    // /summon policemod:soldier_mob
+    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+    //         () -> new DeferredSpawnEggItem(POLICE_MOB, 0x0000FF, 0xFFFFFF, new Item.Properties()));
     
-    public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
-            () -> new SpawnEggItem(SOLDIER_MOB.get(), 0x8B4513, 0x2F4F4F, new Item.Properties()));
+    // public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
+    //         () -> new DeferredSpawnEggItem(SOLDIER_MOB, 0x8B4513, 0x2F4F4F, new Item.Properties()));
     
     // Sounds - temporarily disabled to avoid missing sound warnings
     // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
@@ -98,5 +105,11 @@ public class PoliceMod {
     public void entityAttributes(EntityAttributeCreationEvent event) {
         event.put(POLICE_MOB.get(), PoliceMob.createAttributes().build());
         event.put(SOLDIER_MOB.get(), SoldierMob.createAttributes().build());
+    }
+    
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        SpawnPoliceCommand.register(event.getDispatcher());
+        SpawnSoldierCommand.register(event.getDispatcher());
     }
 }
