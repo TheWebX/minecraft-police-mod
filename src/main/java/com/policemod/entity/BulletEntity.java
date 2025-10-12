@@ -10,13 +10,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-public class BulletEntity extends Projectile {
+public class BulletEntity extends Projectile implements ItemSupplier {
     private int life = 0;
     private double damage = 3.0D;
     
@@ -137,5 +138,10 @@ public class BulletEntity extends Projectile {
     
     public double getDamage() {
         return this.damage;
+    }
+    
+    @Override
+    public net.minecraft.world.item.ItemStack getItem() {
+        return new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW);
     }
 }
