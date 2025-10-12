@@ -126,7 +126,7 @@ public class SoldierMob extends PathfinderMob {
         this.level.addFreshEntity(bullet);
             this.setShootCooldown(2); // Double shooting rate (machine gun)
         
-        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
+        this.playSound(PoliceMod.MACHINE_GUN_SHOT.get(), 1.0F, 0.8F);
     }
     
     @Override

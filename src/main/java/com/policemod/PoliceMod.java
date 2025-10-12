@@ -73,15 +73,18 @@ public class PoliceMod {
     public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
             () -> new CustomSpawnEggItem(() -> SOLDIER_MOB.get(), 0x8B4513, 0x2F4F4F, "Soldier", new Item.Properties()));
     
-    // Sounds - temporarily disabled to avoid missing sound warnings
-    // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
-    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "gun_shot")));
+    // Sounds
+    public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "gun_shot")));
     
-    // public static final RegistryObject<SoundEvent> POLICE_HURT = SOUNDS.register("police_hurt",
-    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_hurt")));
+    public static final RegistryObject<SoundEvent> MACHINE_GUN_SHOT = SOUNDS.register("machine_gun_shot",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "machine_gun_shot")));
     
-    // public static final RegistryObject<SoundEvent> POLICE_DEATH = SOUNDS.register("police_death",
-    //         () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_death")));
+    public static final RegistryObject<SoundEvent> POLICE_HURT = SOUNDS.register("police_hurt",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_hurt")));
+    
+    public static final RegistryObject<SoundEvent> POLICE_DEATH = SOUNDS.register("police_death",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "police_death")));
     
     public PoliceMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -123,6 +126,7 @@ public class PoliceMod {
     
     @SubscribeEvent
     public void buildContents(CreativeModeTabEvent.BuildContents event) {
+        // Add to custom police tab
         if (event.getTab() == POLICE_TAB) {
             event.accept(POLICE_GUN.get());
             event.accept(MACHINE_GUN.get());
@@ -130,7 +134,7 @@ public class PoliceMod {
             event.accept(SOLDIER_SPAWN_EGG.get());
         }
         
-        // Also add spawn eggs to the spawn eggs tab
+        // Add spawn eggs to spawn eggs tab
         if (event.getTab() == net.minecraft.world.item.CreativeModeTabs.SPAWN_EGGS) {
             event.accept(POLICE_SPAWN_EGG.get());
             event.accept(SOLDIER_SPAWN_EGG.get());

@@ -43,25 +43,5 @@ public class SoldierMobRenderer extends HumanoidMobRenderer<SoldierMob, Humanoid
         }
     }
     
-    @Override
-    public void render(SoldierMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
-        
-        // Render machine gun in hand when shooting
-        if (entity.isAggressive() && entity.getTarget() != null) {
-            poseStack.pushPose();
-            
-            // Position the machine gun in the right hand
-            poseStack.translate(0.0D, 0.0D, 0.0D);
-            poseStack.scale(0.5F, 0.5F, 0.5F);
-            
-            ItemStack gunStack = new ItemStack(PoliceMod.MACHINE_GUN.get());
-            if (!gunStack.isEmpty()) {
-                this.itemRenderer.renderStatic(gunStack, net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, packedLight, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, poseStack, bufferSource, entity.level, entity.getId());
-            }
-            
-            poseStack.popPose();
-        }
-    }
     
 }

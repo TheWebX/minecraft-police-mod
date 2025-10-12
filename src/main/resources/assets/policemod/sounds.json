@@ -1,20 +1,38 @@
 {
   "gun_shot": {
     "sounds": [
-      "policemod:gun_shot"
-    ],
-    "subtitle": "Gun Shot"
+      {
+        "name": "policemod:gun_shot",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "machine_gun_shot": {
+    "sounds": [
+      {
+        "name": "policemod:machine_gun_shot",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ]
   },
   "police_hurt": {
     "sounds": [
-      "policemod:police_hurt"
-    ],
-    "subtitle": "Police Officer Hurt"
+      {
+        "name": "policemod:police_hurt",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
   },
   "police_death": {
     "sounds": [
-      "policemod:police_death"
-    ],
-    "subtitle": "Police Officer Death"
+      {
+        "name": "policemod:police_death",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
   }
 }
