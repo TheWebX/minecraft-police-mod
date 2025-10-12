@@ -1,6 +1,7 @@
 package com.policemod.entity;
 
 import com.policemod.PoliceMod;
+import com.policemod.entity.SoldierMob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -333,16 +334,19 @@ public class PoliceMob extends PathfinderMob {
             }
             
             // Don't attack other police or soldiers
-            if (target instanceof PoliceMob || target.getType().getRegistryName().toString().equals("policemod:soldier_mob")) {
+            if (target instanceof PoliceMob || target instanceof SoldierMob) {
                 return false;
             }
             
             // Don't attack peaceful animals (cows, pigs, sheep, chickens, etc.)
-            if (target instanceof net.minecraft.world.entity.animal.Animal && !(target instanceof net.minecraft.world.entity.monster.Monster)) {
+            // But DO attack slimes and other hostile mobs
+            if (target instanceof net.minecraft.world.entity.animal.Animal && 
+                !(target instanceof net.minecraft.world.entity.monster.Monster) &&
+                !(target instanceof net.minecraft.world.entity.monster.Slime)) {
                 return false;
             }
             
-            // Attack all other entities (hostile mobs, players, etc.)
+            // Attack all other entities (hostile mobs including slimes, players, etc.)
             return true;
         }
     }

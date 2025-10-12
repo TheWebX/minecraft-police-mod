@@ -328,16 +328,19 @@ public class SoldierMob extends PathfinderMob {
             }
             
             // Don't attack other police or soldiers
-            if (target instanceof PoliceMob || target.getType().getRegistryName().toString().equals("policemod:soldier_mob")) {
+            if (target instanceof PoliceMob || target instanceof SoldierMob) {
                 return false;
             }
             
             // Don't attack peaceful animals (cows, pigs, sheep, chickens, etc.)
-            if (target instanceof net.minecraft.world.entity.animal.Animal && !(target instanceof net.minecraft.world.entity.monster.Monster)) {
+            // But DO attack slimes and other hostile mobs
+            if (target instanceof net.minecraft.world.entity.animal.Animal && 
+                !(target instanceof net.minecraft.world.entity.monster.Monster) &&
+                !(target instanceof net.minecraft.world.entity.monster.Slime)) {
                 return false;
             }
             
-            // Attack all other entities (hostile mobs, players, etc.)
+            // Attack all other entities (hostile mobs including slimes, players, etc.)
             return true;
         }
     }
@@ -398,7 +401,7 @@ public class SoldierMob extends PathfinderMob {
             
             // Shoot at target if in range and cooldown is ready
             double distance = this.soldier.distanceToSqr(this.target);
-            if (distance <= 1600.0D && this.soldier.canShoot()) { // 40 block range
+            if (distance <= 2500.0D && this.soldier.canShoot()) { // 50 block range (increased from 40)
                 this.soldier.shootAtTarget(this.target);
             }
             
