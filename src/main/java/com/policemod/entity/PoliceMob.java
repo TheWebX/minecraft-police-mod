@@ -349,6 +349,7 @@ public class PoliceMob extends PathfinderMob {
             // Attack all other entities (hostile mobs including slimes, players, etc.)
             return true;
         }
+        
     }
     
     private static class AttackPlayersGoal extends NearestAttackableTargetGoal<Player> {

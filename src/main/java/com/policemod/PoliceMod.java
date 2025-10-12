@@ -19,6 +19,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -59,16 +60,16 @@ public class PoliceMod {
             () -> new GunItem(new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
-    
+
     public static final RegistryObject<Item> MACHINE_GUN = ITEMS.register("machine_gun",
             () -> new MachineGunItem(new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.RARE)));
-    
+
     // Custom spawn eggs using supplier to avoid registry timing issues
     public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
             () -> new CustomSpawnEggItem(() -> POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, "Police Officer", new Item.Properties()));
-    
+
     public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
             () -> new CustomSpawnEggItem(() -> SOLDIER_MOB.get(), 0x8B4513, 0x2F4F4F, "Soldier", new Item.Properties()));
     
@@ -109,5 +110,15 @@ public class PoliceMod {
     public void registerCommands(RegisterCommandsEvent event) {
         SpawnPoliceCommand.register(event.getDispatcher());
         SpawnSoldierCommand.register(event.getDispatcher());
+    }
+    
+    @SubscribeEvent
+    public void buildContents(CreativeModeTabEvent.BuildContents event) {
+        if (event.getTab() == POLICE_TAB) {
+            event.accept(POLICE_GUN.get());
+            event.accept(MACHINE_GUN.get());
+            event.accept(POLICE_SPAWN_EGG.get());
+            event.accept(SOLDIER_SPAWN_EGG.get());
+        }
     }
 }
