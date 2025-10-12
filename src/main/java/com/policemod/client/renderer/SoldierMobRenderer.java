@@ -27,14 +27,26 @@ public class SoldierMobRenderer extends HumanoidMobRenderer<SoldierMob, Humanoid
     
     @Override
     public void render(SoldierMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
-        // Test: Always raise arms to see if animation works
-        this.getModel().rightArm.xRot = -2.0F;
-        this.getModel().rightArm.yRot = 0.0F;
-        this.getModel().rightArm.zRot = 0.0F;
-        this.getModel().leftArm.xRot = -0.5F;
+        // Modify arm position for shooting animation
+        boolean isShooting = entity.isAggressive() && entity.getTarget() != null;
+        
+        if (isShooting) {
+            // Raise right arm when shooting
+            this.getModel().rightArm.xRot = -2.0F;
+            this.getModel().rightArm.yRot = 0.0F;
+            this.getModel().rightArm.zRot = 0.0F;
+            this.getModel().leftArm.xRot = -0.5F;
+        } else {
+            // Reset arm positions when not shooting
+            this.getModel().rightArm.xRot = 0.0F;
+            this.getModel().rightArm.yRot = 0.0F;
+            this.getModel().rightArm.zRot = 0.0F;
+            this.getModel().leftArm.xRot = 0.0F;
+        }
         
         // Render the entity
         super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
+        
     }
     
     
