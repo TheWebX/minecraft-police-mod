@@ -5,7 +5,7 @@ The mod has been fixed to resolve the `Registry Object not present: policemod:po
 
 1. **Registry Order**: The spawn egg was trying to access the police mob entity before it was registered
 2. **Creative Tab**: Removed incompatible creative tab assignments for Minecraft 1.19.3
-3. **Spawn Egg**: Simplified to use the standard SpawnEggItem instead of custom class
+3. **Spawn Egg**: Temporarily disabled spawn egg due to registry timing issues in Forge 1.19.3
 
 ## Installation
 
@@ -15,7 +15,7 @@ The mod has been fixed to resolve the `Registry Object not present: policemod:po
 
 ## Features
 
-- **Police Mobs**: Spawn using the Police Spawn Egg (blue and white egg)
+- **Police Mobs**: Spawn using `/summon policemod:police_mob` command
 - **Police Gun**: Craft with iron ingots and stick, or get from police mob drops
 - **Protection**: Police automatically defend villagers from hostile mobs and players
 - **Smart AI**: Police patrol villages and respond to threats
@@ -32,7 +32,8 @@ The mod has been fixed to resolve the `Registry Object not present: policemod:po
 - S = Stick
 
 ### Police Spawn Egg
-- Use the Police Spawn Egg item from creative menu or commands
+- **Temporarily Disabled**: Due to registry timing issues in Forge 1.19.3
+- Use `/summon policemod:police_mob` command instead
 
 ## Commands
 
