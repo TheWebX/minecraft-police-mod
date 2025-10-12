@@ -26,11 +26,9 @@ public class SoldierMobRenderer extends HumanoidMobRenderer<SoldierMob, Humanoid
     }
     
     @Override
-    protected void setupRotations(SoldierMob entityLiving, com.mojang.blaze3d.vertex.PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.setupRotations(entityLiving, poseStack, ageInTicks, rotationYaw, partialTicks);
-        
-        // Show machine gun in hand when shooting
-        if (entityLiving.isAggressive() && entityLiving.getTarget() != null) {
+    public void render(SoldierMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
+        // Modify arm position before rendering
+        if (entity.isAggressive() && entity.getTarget() != null) {
             // Raise right arm when shooting
             this.getModel().rightArm.xRot = -1.5F;
             this.getModel().rightArm.yRot = 0.0F;
@@ -41,6 +39,8 @@ public class SoldierMobRenderer extends HumanoidMobRenderer<SoldierMob, Humanoid
             this.getModel().rightArm.yRot = 0.0F;
             this.getModel().rightArm.zRot = 0.0F;
         }
+        
+        super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
     }
     
     
