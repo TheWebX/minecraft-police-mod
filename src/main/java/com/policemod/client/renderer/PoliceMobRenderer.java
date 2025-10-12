@@ -26,13 +26,11 @@ public class PoliceMobRenderer extends HumanoidMobRenderer<PoliceMob, HumanoidMo
     }
     
     @Override
-    protected void setupRotations(PoliceMob entityLiving, com.mojang.blaze3d.vertex.PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.setupRotations(entityLiving, poseStack, ageInTicks, rotationYaw, partialTicks);
-    }
-    
-    @Override
-    protected void prepareMobModel(PoliceMob entity, float limbSwing, float limbSwingAmount, float partialTick) {
-        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+    public void render(PoliceMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
+        // Store original arm positions
+        float originalRightArmX = this.getModel().rightArm.xRot;
+        float originalRightArmY = this.getModel().rightArm.yRot;
+        float originalRightArmZ = this.getModel().rightArm.zRot;
         
         // Modify arm position for shooting animation
         if (entity.isAggressive() && entity.getTarget() != null) {
@@ -40,12 +38,15 @@ public class PoliceMobRenderer extends HumanoidMobRenderer<PoliceMob, HumanoidMo
             this.getModel().rightArm.xRot = -1.5F;
             this.getModel().rightArm.yRot = 0.0F;
             this.getModel().rightArm.zRot = 0.0F;
-        } else {
-            // Reset arm position when not shooting
-            this.getModel().rightArm.xRot = 0.0F;
-            this.getModel().rightArm.yRot = 0.0F;
-            this.getModel().rightArm.zRot = 0.0F;
         }
+        
+        // Render the entity
+        super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
+        
+        // Restore original arm positions
+        this.getModel().rightArm.xRot = originalRightArmX;
+        this.getModel().rightArm.yRot = originalRightArmY;
+        this.getModel().rightArm.zRot = originalRightArmZ;
     }
     
     
