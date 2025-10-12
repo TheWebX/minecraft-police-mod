@@ -1,6 +1,10 @@
 {
   "entity.policemod.police_mob": "Police Officer",
+  "entity.policemod.soldier_mob": "Soldier",
   "item.policemod.police_gun": "Police Gun",
+  "item.policemod.machine_gun": "Machine Gun",
+  "item.policemod.police_spawn_egg": "Police Spawn Egg",
+  "item.policemod.soldier_spawn_egg": "Soldier Spawn Egg",
   "itemGroup.policemod": "Police Mod",
   "subtitles.policemod.gun_shot": "Gun Shot",
   "subtitles.policemod.police_hurt": "Police Officer Hurt",

@@ -2,6 +2,7 @@ package com.policemod;
 
 import com.policemod.client.renderer.BulletRenderer;
 import com.policemod.client.renderer.PoliceMobRenderer;
+import com.policemod.client.renderer.SoldierMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,6 +16,7 @@ public class PoliceModClient {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             EntityRenderers.register(PoliceMod.POLICE_MOB.get(), PoliceMobRenderer::new);
+            EntityRenderers.register(PoliceMod.SOLDIER_MOB.get(), SoldierMobRenderer::new);
             EntityRenderers.register(PoliceMod.BULLET.get(), BulletRenderer::new);
         });
     }

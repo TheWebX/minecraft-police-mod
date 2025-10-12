@@ -1,8 +1,10 @@
 package com.policemod;
 
 import com.policemod.entity.PoliceMob;
+import com.policemod.entity.SoldierMob;
 import com.policemod.entity.BulletEntity;
 import com.policemod.item.GunItem;
+import com.policemod.item.MachineGunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -10,7 +12,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-// import net.minecraft.world.item.SpawnEggItem; // Temporarily disabled
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,6 +40,11 @@ public class PoliceMod {
                     .sized(0.6f, 1.8f)
                     .build("police_mob"));
     
+    public static final RegistryObject<EntityType<SoldierMob>> SOLDIER_MOB = ENTITIES.register("soldier_mob",
+            () -> EntityType.Builder.of(SoldierMob::new, MobCategory.CREATURE)
+                    .sized(0.6f, 1.8f)
+                    .build("soldier_mob"));
+    
     public static final RegistryObject<EntityType<BulletEntity>> BULLET = ENTITIES.register("bullet",
             () -> EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC)
                     .sized(0.1f, 0.1f)
@@ -49,10 +56,16 @@ public class PoliceMod {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
     
-    // Spawn egg disabled due to persistent registry timing issues in Forge 1.19.3
-    // Use /summon policemod:police_mob command instead
-    // public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-    //         () -> new PoliceSpawnEggItem(new Item.Properties()));
+    public static final RegistryObject<Item> MACHINE_GUN = ITEMS.register("machine_gun",
+            () -> new MachineGunItem(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE)));
+    
+    public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
+            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
+    
+    public static final RegistryObject<Item> SOLDIER_SPAWN_EGG = ITEMS.register("soldier_spawn_egg",
+            () -> new SpawnEggItem(SOLDIER_MOB.get(), 0x8B4513, 0x2F4F4F, new Item.Properties()));
     
     // Sounds - temporarily disabled to avoid missing sound warnings
     // public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
@@ -84,5 +97,6 @@ public class PoliceMod {
     @SubscribeEvent
     public void entityAttributes(EntityAttributeCreationEvent event) {
         event.put(POLICE_MOB.get(), PoliceMob.createAttributes().build());
+        event.put(SOLDIER_MOB.get(), SoldierMob.createAttributes().build());
     }
 }

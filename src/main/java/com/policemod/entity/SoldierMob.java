@@ -27,24 +27,23 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class PoliceMob extends PathfinderMob {
-    private static final EntityDataAccessor<Boolean> IS_AGGRESSIVE = SynchedEntityData.defineId(PoliceMob.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> TARGET_VILLAGER_ID = SynchedEntityData.defineId(PoliceMob.class, EntityDataSerializers.INT);
+public class SoldierMob extends PathfinderMob {
+    private static final EntityDataAccessor<Boolean> IS_AGGRESSIVE = SynchedEntityData.defineId(SoldierMob.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> TARGET_VILLAGER_ID = SynchedEntityData.defineId(SoldierMob.class, EntityDataSerializers.INT);
     
     private int shootCooldown = 0;
     private LivingEntity targetVillager;
     
-    public PoliceMob(EntityType<? extends PathfinderMob> type, Level level) {
+    public SoldierMob(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
-        // setMaxUpStep is not available in 1.19.3
     }
     
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
-                .add(Attributes.ATTACK_DAMAGE, 3.0D)
-                .add(Attributes.FOLLOW_RANGE, 64.0D); // Increased from 48 to 64 blocks
+                .add(Attributes.MAX_HEALTH, 25.0D) // Higher health than police
+                .add(Attributes.MOVEMENT_SPEED, 0.3D) // Faster movement
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.FOLLOW_RANGE, 80.0D); // Even longer range
     }
     
     @Override
@@ -110,21 +109,21 @@ public class PoliceMob extends PathfinderMob {
         // Add some prediction for moving targets
         Vec3 targetVelocity = target.getDeltaMovement();
         double distance = startPos.distanceTo(targetPos);
-        double timeToHit = distance / 2.0; // Bullet speed is 2.0
+        double timeToHit = distance / 4.0; // Bullet speed is 4.0
         
         Vec3 predictedPos = targetPos.add(targetVelocity.scale(timeToHit));
         Vec3 direction = predictedPos.subtract(startPos).normalize();
         
         BulletEntity bullet = new BulletEntity(PoliceMod.BULLET.get(), this.level);
         bullet.setPos(startPos);
-        bullet.shoot(direction.x, direction.y, direction.z, 4.0F, 0.3F); // Much faster bullets, reduced spread
+        bullet.shoot(direction.x, direction.y, direction.z, 5.0F, 0.2F); // Even faster bullets, very low spread
         bullet.setOwner(this);
-        bullet.setDamage(6.0D); // Increased damage from 4 to 6
+        bullet.setDamage(8.0D); // Higher damage than police
         
         this.level.addFreshEntity(bullet);
-        this.setShootCooldown(15); // Reduced cooldown for more aggressive shooting
+        this.setShootCooldown(8); // Much faster shooting rate (machine gun)
         
-        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F);
+        this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
     }
     
     @Override
@@ -182,19 +181,19 @@ public class PoliceMob extends PathfinderMob {
         }
     }
     
-    // Custom AI Goals
+    // Custom AI Goals (same as police but with different ranges)
     private static class DefendVillagersGoal extends Goal {
-        private final PoliceMob police;
+        private final SoldierMob soldier;
         private Villager targetVillager;
         private int scanTimer = 0;
         
-        public DefendVillagersGoal(PoliceMob police) {
-            this.police = police;
+        public DefendVillagersGoal(SoldierMob soldier) {
+            this.soldier = soldier;
         }
         
         @Override
         public boolean canUse() {
-            return true; // Always try to defend villagers
+            return true;
         }
         
         @Override
@@ -206,45 +205,43 @@ public class PoliceMob extends PathfinderMob {
         public void tick() {
             this.scanTimer++;
             
-            // Scan for villagers in danger every 20 ticks (1 second)
             if (this.scanTimer >= 20) {
                 this.scanTimer = 0;
-                this.targetVillager = this.police.level.getNearestEntity(Villager.class, 
-                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(24.0D), 
-                    this.police, 
-                    this.police.getX(), 
-                    this.police.getY(), 
-                    this.police.getZ(), 
-                    this.police.getBoundingBox().inflate(24.0D, 4.0D, 24.0D));
+                this.targetVillager = this.soldier.level.getNearestEntity(Villager.class, 
+                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(32.0D), 
+                    this.soldier, 
+                    this.soldier.getX(), 
+                    this.soldier.getY(), 
+                    this.soldier.getZ(), 
+                    this.soldier.getBoundingBox().inflate(32.0D, 4.0D, 32.0D));
                 
                 if (this.targetVillager != null) {
-                    this.police.setTargetVillager(this.targetVillager);
-                    this.police.setAggressive(true);
+                    this.soldier.setTargetVillager(this.targetVillager);
+                    this.soldier.setAggressive(true);
                 }
             }
             
-            // If we have a target villager, protect them
             if (this.targetVillager != null && this.targetVillager.isAlive()) {
                 LivingEntity attacker = this.targetVillager.getLastHurtByMob();
-                if (attacker != null && attacker != this.police) {
-                    this.police.setTarget(attacker);
-                    this.police.setAggressive(true);
+                if (attacker != null && attacker != this.soldier) {
+                    this.soldier.setTarget(attacker);
+                    this.soldier.setAggressive(true);
                 }
             }
         }
     }
     
     private static class DefendPoliceGoal extends Goal {
-        private final PoliceMob police;
+        private final SoldierMob soldier;
         private int scanTimer = 0;
         
-        public DefendPoliceGoal(PoliceMob police) {
-            this.police = police;
+        public DefendPoliceGoal(SoldierMob soldier) {
+            this.soldier = soldier;
         }
         
         @Override
         public boolean canUse() {
-            return true; // Always try to defend other police
+            return true;
         }
         
         @Override
@@ -256,22 +253,21 @@ public class PoliceMob extends PathfinderMob {
         public void tick() {
             this.scanTimer++;
             
-            // Scan for other police in danger every 20 ticks (1 second)
             if (this.scanTimer >= 20) {
                 this.scanTimer = 0;
-                PoliceMob otherPolice = this.police.level.getNearestEntity(PoliceMob.class, 
-                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(24.0D), 
-                    this.police, 
-                    this.police.getX(), 
-                    this.police.getY(), 
-                    this.police.getZ(), 
-                    this.police.getBoundingBox().inflate(24.0D, 4.0D, 24.0D));
+                LivingEntity otherPolice = this.soldier.level.getNearestEntity(PoliceMob.class, 
+                    net.minecraft.world.entity.ai.targeting.TargetingConditions.forCombat().range(32.0D), 
+                    this.soldier, 
+                    this.soldier.getX(), 
+                    this.soldier.getY(), 
+                    this.soldier.getZ(), 
+                    this.soldier.getBoundingBox().inflate(32.0D, 4.0D, 32.0D));
                 
-                if (otherPolice != null && otherPolice != this.police && otherPolice.isAlive()) {
+                if (otherPolice != null && otherPolice != this.soldier && otherPolice.isAlive()) {
                     LivingEntity attacker = otherPolice.getLastHurtByMob();
-                    if (attacker != null && attacker != this.police) {
-                        this.police.setTarget(attacker);
-                        this.police.setAggressive(true);
+                    if (attacker != null && attacker != this.soldier) {
+                        this.soldier.setTarget(attacker);
+                        this.soldier.setAggressive(true);
                     }
                 }
             }
@@ -279,34 +275,33 @@ public class PoliceMob extends PathfinderMob {
     }
     
     private static class PatrolVillageGoal extends Goal {
-        private final PoliceMob police;
+        private final SoldierMob soldier;
         private BlockPos patrolPos;
         private int patrolTimer = 0;
         
-        public PatrolVillageGoal(PoliceMob police) {
-            this.police = police;
+        public PatrolVillageGoal(SoldierMob soldier) {
+            this.soldier = soldier;
         }
         
         @Override
         public boolean canUse() {
-            return !this.police.isAggressive() && this.police.getRandom().nextFloat() < 0.02F;
+            return !this.soldier.isAggressive() && this.soldier.getRandom().nextFloat() < 0.02F;
         }
         
         @Override
         public void start() {
             this.patrolTimer = 0;
-            // Find a random position within 16 blocks to patrol to
-            double x = this.police.getX() + (this.police.getRandom().nextDouble() - 0.5D) * 32.0D;
-            double z = this.police.getZ() + (this.police.getRandom().nextDouble() - 0.5D) * 32.0D;
-            this.patrolPos = new BlockPos(x, this.police.getY(), z);
+            double x = this.soldier.getX() + (this.soldier.getRandom().nextDouble() - 0.5D) * 40.0D;
+            double z = this.soldier.getZ() + (this.soldier.getRandom().nextDouble() - 0.5D) * 40.0D;
+            this.patrolPos = new BlockPos(x, this.soldier.getY(), z);
         }
         
         @Override
         public void tick() {
             if (this.patrolPos != null) {
-                this.police.getNavigation().moveTo(this.patrolPos.getX(), this.patrolPos.getY(), this.patrolPos.getZ(), 1.0D);
+                this.soldier.getNavigation().moveTo(this.patrolPos.getX(), this.patrolPos.getY(), this.patrolPos.getZ(), 1.2D);
                 this.patrolTimer++;
-                if (this.patrolTimer > 200 || this.police.distanceToSqr(this.patrolPos.getX(), this.patrolPos.getY(), this.patrolPos.getZ()) < 4.0D) {
+                if (this.patrolTimer > 200 || this.soldier.distanceToSqr(this.patrolPos.getX(), this.patrolPos.getY(), this.patrolPos.getZ()) < 4.0D) {
                     this.patrolPos = null;
                 }
             }
@@ -314,8 +309,8 @@ public class PoliceMob extends PathfinderMob {
     }
     
     private static class AttackMonstersGoal extends NearestAttackableTargetGoal<Monster> {
-        public AttackMonstersGoal(PoliceMob police) {
-            super(police, Monster.class, true);
+        public AttackMonstersGoal(SoldierMob soldier) {
+            super(soldier, Monster.class, true);
         }
         
         @Override
@@ -325,8 +320,8 @@ public class PoliceMob extends PathfinderMob {
     }
     
     private static class AttackPlayersGoal extends NearestAttackableTargetGoal<Player> {
-        public AttackPlayersGoal(PoliceMob police) {
-            super(police, Player.class, true);
+        public AttackPlayersGoal(SoldierMob soldier) {
+            super(soldier, Player.class, true);
         }
         
         @Override
@@ -336,24 +331,24 @@ public class PoliceMob extends PathfinderMob {
     }
     
     private static class RetaliateGoal extends Goal {
-        private final PoliceMob police;
+        private final SoldierMob soldier;
         private LivingEntity target;
         private int attackTimer = 0;
         private int followTimer = 0;
         
-        public RetaliateGoal(PoliceMob police) {
-            this.police = police;
+        public RetaliateGoal(SoldierMob soldier) {
+            this.soldier = soldier;
         }
         
         @Override
         public boolean canUse() {
-            LivingEntity target = this.police.getTarget();
-            return target != null && target.isAlive() && this.police.isAggressive();
+            LivingEntity target = this.soldier.getTarget();
+            return target != null && target.isAlive() && this.soldier.isAggressive();
         }
         
         @Override
         public void start() {
-            this.target = this.police.getTarget();
+            this.target = this.soldier.getTarget();
             this.attackTimer = 0;
             this.followTimer = 0;
         }
@@ -369,25 +364,25 @@ public class PoliceMob extends PathfinderMob {
             this.attackTimer++;
             
             // Follow the target
-            if (this.police.distanceToSqr(this.target) > 64.0D) {
-                this.police.getNavigation().moveTo(this.target, 1.0D);
+            if (this.soldier.distanceToSqr(this.target) > 100.0D) {
+                this.soldier.getNavigation().moveTo(this.target, 1.2D);
             } else {
-                this.police.getNavigation().stop();
+                this.soldier.getNavigation().stop();
             }
             
             // Look at target
-            this.police.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+            this.soldier.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
             
             // Shoot at target if in range and cooldown is ready
-            double distance = this.police.distanceToSqr(this.target);
-            if (distance <= 1024.0D && this.police.canShoot()) { // 32 block range (increased from 24)
-                this.police.shootAtTarget(this.target);
+            double distance = this.soldier.distanceToSqr(this.target);
+            if (distance <= 1600.0D && this.soldier.canShoot()) { // 40 block range
+                this.soldier.shootAtTarget(this.target);
             }
             
             // If target is too far, stop following after 10 seconds
-            if (this.followTimer > 200 && distance > 400.0D) {
-                this.police.setTarget(null);
-                this.police.setAggressive(false);
+            if (this.followTimer > 200 && distance > 2500.0D) {
+                this.soldier.setTarget(null);
+                this.soldier.setAggressive(false);
                 this.stop();
             }
         }
