@@ -3,7 +3,6 @@ package com.policemod;
 import com.policemod.entity.PoliceMob;
 import com.policemod.entity.BulletEntity;
 import com.policemod.item.GunItem;
-import com.policemod.item.PoliceSpawnEggItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -50,7 +50,7 @@ public class PoliceMod {
                     .rarity(Rarity.UNCOMMON)));
     
     public static final RegistryObject<Item> POLICE_SPAWN_EGG = ITEMS.register("police_spawn_egg",
-            () -> new PoliceSpawnEggItem());
+            () -> new SpawnEggItem(POLICE_MOB.get(), 0x0000FF, 0xFFFFFF, new Item.Properties()));
     
     // Sounds
     public static final RegistryObject<SoundEvent> GUN_SHOT = SOUNDS.register("gun_shot",
