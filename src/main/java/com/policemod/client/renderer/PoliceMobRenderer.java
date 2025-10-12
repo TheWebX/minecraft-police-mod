@@ -26,8 +26,15 @@ public class PoliceMobRenderer extends HumanoidMobRenderer<PoliceMob, HumanoidMo
     }
     
     @Override
-    public void render(PoliceMob entity, float entityYaw, float partialTicks, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource bufferSource, int packedLight) {
-        // Modify arm position before rendering
+    protected void setupRotations(PoliceMob entityLiving, com.mojang.blaze3d.vertex.PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
+        super.setupRotations(entityLiving, poseStack, ageInTicks, rotationYaw, partialTicks);
+    }
+    
+    @Override
+    protected void prepareMobModel(PoliceMob entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+        
+        // Modify arm position for shooting animation
         if (entity.isAggressive() && entity.getTarget() != null) {
             // Raise right arm when shooting
             this.getModel().rightArm.xRot = -1.5F;
@@ -39,8 +46,6 @@ public class PoliceMobRenderer extends HumanoidMobRenderer<PoliceMob, HumanoidMo
             this.getModel().rightArm.yRot = 0.0F;
             this.getModel().rightArm.zRot = 0.0F;
         }
-        
-        super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
     }
     
     
