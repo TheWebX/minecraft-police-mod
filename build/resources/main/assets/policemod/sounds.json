@@ -1,0 +1,38 @@
+{
+  "gun_shot": {
+    "sounds": [
+      {
+        "name": "policemod:gun_shot",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "machine_gun_shot": {
+    "sounds": [
+      {
+        "name": "policemod:machine_gun_shot",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "police_hurt": {
+    "sounds": [
+      {
+        "name": "policemod:police_hurt",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
+  },
+  "police_death": {
+    "sounds": [
+      {
+        "name": "policemod:police_death",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
+  }
+}

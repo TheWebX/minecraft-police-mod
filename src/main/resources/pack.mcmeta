@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Police Mod Resources",
+    "pack_format": 12,
+    "supported_formats": {
+      "min_inclusive": 12,
+      "max_inclusive": 12
+    }
+  }
+}
